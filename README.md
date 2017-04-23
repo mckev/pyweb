@@ -1,23 +1,17 @@
 # pyweb
 A minimalistic Python 3 web framework.
-It is built around Python WSGI web server interface and provides useful libraries such as cookies, session, database and cache.
+It is built around Python WSGI web server standard interface and provides useful libraries such as cookies, session, database and cache.
 
 
 ## Features
-   - It's very close to WSGI standard. You'll still see environ, start_response and response_body.
+   - It's very close to Python WSGI standard. You'll still see environ, start_response and response_body.
      This framework doesn't try to abstract it away.
-
    - Small: The overall framework is aimed to be less than 10,000 lines of code.
-     Thin: There is no abstraction. You should be able to see how everything works.
-     Explicit: As with The Zen of Python, there is less magic happening here. Everything should be clear and explicit.
-
+     Thin: There is very less abstraction. You should be able to see how everything works under the hood.
+     Explicit: As with The Zen of Python, there is less magic happening here. Everything is aimed to be clear and explicit.
    - Use only Python 3 standard library.
-     The only exception are "psycopg2" for PostgreSQL database access and "redis" for cache and session.
-     Nothing else.
-
-   - Others:
-        - 256-bit session id.
-        - Fast. More than 2,500 requests/sec with database connection.
+     The only third party libraries used are "psycopg2" for PostgreSQL database access and "redis" for cache and session.
+   - Fast. More than 2,500 requests/sec serving pages with database connection.
 
 
 ## How to install

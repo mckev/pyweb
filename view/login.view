@@ -1,0 +1,319 @@
+<?py
+	import html
+?><!DOCTYPE html>
+<html lang="en">
+<head>
+<title><?py print (html.escape (title), end='') ?></title>
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" />
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css" rel="stylesheet" />
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script>
+	var jq = jQuery.noConflict ();
+
+	function isEmpty (str) {
+		// Ref: http://stackoverflow.com/questions/154059/how-do-you-check-for-an-empty-string-in-javascript
+		return (!str || str.length === 0);
+	}
+
+	// Variables encapsulation
+	var vars = new function () {
+		// Ref:
+		//    - http://stackoverflow.com/questions/1759987/listening-for-variable-changes-in-javascript-or-jquery
+		//    - f:\SLB\2012 - Pune\training\2015 HTML 5.zip\2015 HTML 5\workspace\Day 2 - HTML5 Continued\MyScripts\JS_IndexedDB.js
+		// Private variables
+		var a = 5;
+		var self = this;
+		// Public methods
+		self.getA = function () {
+			return a;
+		};
+		self.setA = function (val) {
+			a = val;
+		};
+	};
+	// vars.setA (13);
+	// alert ("a: " + vars.getA ());		// Output: a: 13
+	// alert ("a2: " + vars.a);			    // Output: a2: undefined
+
+	// Registration verification
+	function validateRegistrationUsername (showHelp) {
+		var regex = /^[a-zA-Z0-9\.]+$/;
+		var username = jq ('#form-register-username-text').val ();
+		if (showHelp) {
+			jq ('#form-register-username').removeClass ('has-error has-success');
+			jq ('#form-register-username-glyphicon').removeClass ('glyphicon-ok glyphicon-remove');
+			jq ('#form-register-username-help').html ('');
+		}
+		// Immediate false
+		if (isEmpty (username)) {
+			return false;
+		} else if (!regex.test (username)) {
+			if (showHelp) {
+				jq ('#form-register-username').addClass ('has-error');
+				jq ('#form-register-username-glyphicon').addClass ('glyphicon-remove');
+				jq ('#form-register-username-help').html ('username can only contain alphanumeric characters (A-Z, 0-9) or a period (".")');
+			}
+			return false;
+		} else if (username.length < 5) {
+			if (showHelp) {
+				jq ('#form-register-username').addClass ('has-error');
+				jq ('#form-register-username-glyphicon').addClass ('glyphicon-remove');
+				jq ('#form-register-username-help').html ('username must be at least 5 characters long');
+			}
+			return false;
+		}
+		// Check if the username has been taken
+		// jq.get ("<?py print (html.escape (script_root), end='') ?>
+		if (showHelp) {
+			jq ('#form-register-username').addClass ('has-success');
+			jq ('#form-register-username-glyphicon').addClass ('glyphicon-ok');
+		}
+		return true;
+	}
+
+	function validateRegistrationPassword (showHelp) {
+		var password = jq ('#form-register-password-text').val ();
+		if (showHelp) {
+			jq ('#form-register-password').removeClass ('has-error has-success');
+			jq ('#form-register-password-glyphicon').removeClass ('glyphicon-ok glyphicon-remove');
+			jq ('#form-register-password-help').html ('');
+		}
+		if (isEmpty (password)) {
+			return false;
+		} else if (password.length < 8) {
+			if (showHelp) {
+				jq ('#form-register-password').addClass ('has-error');
+				jq ('#form-register-password-glyphicon').addClass ('glyphicon-remove');
+				jq ('#form-register-password-help').html ('password must be at least 8 characters long');
+			}
+			return false;
+		} else {
+			if (showHelp) {
+				jq ('#form-register-password').addClass ('has-success');
+				jq ('#form-register-password-glyphicon').addClass ('glyphicon-ok');
+			}
+			return true;
+		}
+	}
+
+	function validateRegistrationPassword2 (showHelp) {
+		var password = jq ('#form-register-password-text').val ();
+		var password2 = jq ('#form-register-password2-text').val ();
+		if (showHelp) {
+			jq ('#form-register-password2').removeClass ('has-error has-success');
+			jq ('#form-register-password2-glyphicon').removeClass ('glyphicon-ok glyphicon-remove');
+			jq ('#form-register-password2-help').html ('');
+		}
+		if (isEmpty (password2)) {
+			return false;
+		} else if (password !== password2) {
+			if (showHelp) {
+				jq ('#form-register-password2').addClass ('has-error');
+				jq ('#form-register-password2-glyphicon').addClass ('glyphicon-remove');
+				jq ('#form-register-password2-help').html ('passwords do not match');
+			}
+			return false;
+		} else {
+			if (showHelp) {
+				jq ('#form-register-password2').addClass ('has-success');
+				jq ('#form-register-password2-glyphicon').addClass ('glyphicon-ok');
+			}
+			return true;
+		}
+	}
+
+	function validateRegistrationEmail (showHelp) {
+		// Ref: http://stackoverflow.com/questions/2507030/email-validation-using-jquery
+		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		var email = jq ('#form-register-email-text').val ();
+		if (showHelp) {
+			jq ('#form-register-email').removeClass ('has-error has-success');
+			jq ('#form-register-email-glyphicon').removeClass ('glyphicon-ok glyphicon-remove');
+			jq ('#form-register-email-help').html ('');
+		}
+		if (isEmpty (email)) {
+			// E-mail is optional
+			return true;
+		} else if (!regex.test (email)) {
+			if (showHelp) {
+				jq ('#form-register-email').addClass ('has-error');
+				jq ('#form-register-email-glyphicon').addClass ('glyphicon-remove');
+				jq ('#form-register-email-help').html ('please enter a valid e-mail address');
+			}
+			return false;
+		} else {
+			if (showHelp) {
+				jq ('#form-register-email').addClass ('has-success');
+				jq ('#form-register-email-glyphicon').addClass ('glyphicon-ok');
+			}
+			return true;
+		}
+	}
+
+	function validateRegistration (showHelp) {
+		var isValidated = (
+			validateRegistrationUsername (false)
+			&& validateRegistrationPassword (false)
+			&& validateRegistrationPassword2 (false)
+			&& validateRegistrationEmail (false)
+			);
+		if (showHelp) {
+			jq ('#form-register-submit-btn').removeClass ('btn-default btn-success');
+		}
+		if (isValidated) {
+			if (showHelp) {
+				jq ('#form-register-submit-btn').prop ('disabled', false);
+				jq ('#form-register-submit-btn').addClass ('btn-success');
+			}
+			return true;
+		} else {
+			if (showHelp) {
+				jq ('#form-register-submit-btn').prop ('disabled', true);
+				jq ('#form-register-submit-btn').addClass ('btn-default');
+			}
+			return false;
+		}
+	}
+
+	// Login verification
+	function validateLogin (showHelp) {
+		var username = jq ('#form-login-username-text').val ();
+		var password = jq ('#form-login-password-text').val ();
+		var isValidated = (
+			!isEmpty (username)
+			&& !isEmpty (password)
+			);
+		if (isValidated) {
+			if (showHelp && (!jq ('#form-login-submit-btn').hasClass ('btn-success'))) {
+				jq ('#form-login-submit-btn').removeClass ('btn-default btn-success');
+				jq ('#form-login-submit-btn').prop ('disabled', false);
+				jq ('#form-login-submit-btn').addClass ('btn-success');
+			}
+			return true;
+		} else {
+			if (showHelp && (!jq ('#form-login-submit-btn').hasClass ('btn-default'))) {
+				jq ('#form-login-submit-btn').removeClass ('btn-default btn-success');
+				jq ('#form-login-submit-btn').prop ('disabled', true);
+				jq ('#form-login-submit-btn').addClass ('btn-default');
+			}
+			return false;
+		}
+	}
+
+	// Main
+	jq (document).ready (function () {
+		jq ('#form-login-password-text').on ('change keyup', function () {
+			validateLogin (true);
+		});
+		jq ('#form-login-username-text').on ('change keyup', function () {
+			validateLogin (true);
+		});
+		jq ('#form-register-email-text').on ('change', function () {
+			validateRegistrationEmail (true);
+			validateRegistration (true);
+		});
+		jq ('#form-register-password-text').on ('change', function () {
+			validateRegistrationPassword (true);
+			validateRegistrationPassword2 (true);
+			validateRegistration (true);
+		});
+		jq ('#form-register-password2-text').on ('change', function () {
+			validateRegistrationPassword (true);
+			validateRegistrationPassword2 (true);
+			validateRegistration (true);
+		});
+		jq ('#form-register-username-text').on ('change', function () {
+			validateRegistrationUsername (true);
+			validateRegistration (true);
+		});
+		jq ('#link-login').on ('click', function () {
+			// To prevent browser from auto-populating the username and password on registration form - http://stackoverflow.com/questions/6487970/disable-firefoxs-auto-fill
+			jq ('#form-register-username-text').val ('');
+			jq ('#form-register-password-text').val ('');
+			jq ('#form-register-password2-text').val ('');
+			validateRegistrationUsername (true);
+			validateRegistrationPassword (true);
+			validateRegistrationPassword2 (true);
+			// Determine the state of the registration and login buttons
+			validateLogin (true);
+			validateRegistration (true);
+			jq ('#modal-login').modal ('show');
+		});
+	});
+</script>
+</head>
+<body>
+	want to join? <a href="#" id="link-login">sign in or create an account</a> in seconds
+
+	<!-- Modal Dialogs -->
+	<div id="modal-login" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="container-fluid">
+						<div class="row">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+						<div class="row">
+							<div class="col-xs-6">
+								<h3>create a new account</h3>
+								<form action="<?py print (html.escape (script_root), end='') ?>/q/login" method="post">
+									<div class="form-group has-feedback" id="form-register-username">
+										<input type="text" class="form-control" id="form-register-username-text" name="form-register-username-text" placeholder="choose a username" />
+										<span class="form-control-feedback glyphicon" id="form-register-username-glyphicon"></span>
+										<span class="help-block" id="form-register-username-help"></span>
+									</div>
+									<div class="form-group has-feedback" id="form-register-password">
+										<input type="password" class="form-control" id="form-register-password-text" name="form-register-password-text" placeholder="password" />
+										<span class="form-control-feedback glyphicon" id="form-register-password-glyphicon"></span>
+										<span class="help-block" id="form-register-password-help"></span>
+									</div>
+									<div class="form-group has-feedback" id="form-register-password2">
+										<input type="password" class="form-control" id="form-register-password2-text" placeholder="verify password" />
+										<span class="form-control-feedback glyphicon" id="form-register-password2-glyphicon"></span>
+										<span class="help-block" id="form-register-password2-help"></span>
+									</div>
+									<div class="form-group has-feedback" id="form-register-email">
+										<input type="text" class="form-control" id="form-register-email-text" name="form-register-email-text" placeholder="email (optional)" />
+										<span class="form-control-feedback glyphicon" id="form-register-email-glyphicon"></span>
+										<span class="help-block" id="form-register-email-help"></span>
+									</div>
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" name="form-register-remember-text" value="on" />remember me
+										</label>
+									</div>
+									<button type="submit" class="btn btn-default" disabled="disabled" id="form-register-submit-btn">create account</button>
+								</form>
+							</div>
+							<div class="col-xs-6">
+								<h3>sign in</h3>
+								<form action="<?py print (html.escape (script_root), end='') ?>/q/login" method="post">
+									<div class="form-group">
+										<input type="text" class="form-control" id="form-login-username-text" name="form-login-username-text" placeholder="username" />
+									</div>
+									<div class="form-group">
+										<input type="password" class="form-control" id="form-login-password-text" name="form-login-password-text" placeholder="password" />
+									</div>
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" name="form-login-remember-text" value="on" />remember me
+										</label>
+									</div>
+									<button type="submit" class="btn btn-default" disabled="disabled" id="form-login-submit-btn">sign in</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-body">
+					<h5><small>We care about your privacy, and we never spam. By creating an account, you agree to User Agreement and Privacy Policy. We're proud of them, and you should read them.</small></h5>
+					<br />
+					<br />
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

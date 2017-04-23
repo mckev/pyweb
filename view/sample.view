@@ -1,0 +1,21 @@
+<?py
+	import html
+?><!DOCTYPE html>
+<html lang="en">
+<head>
+<title><?py print (html.escape (title), end='') ?></title>
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" />
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css" rel="stylesheet" />
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script>
+	var jq = jQuery.noConflict ();
+	jq (document).ready (function () {
+		jq ('body').css ('background-color', 'yellow');
+	});
+</script>
+</head>
+<body>
+Welcome!
+</body>
+</html>
